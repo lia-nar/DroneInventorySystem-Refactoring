@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import com.digitalojt.web.entity.CenterInfo;
 
@@ -14,7 +13,6 @@ import com.digitalojt.web.entity.CenterInfo;
  * @author dotlife
  * 
  */
-@Repository
 public interface CenterInfoRepository extends JpaRepository<CenterInfo, Integer> {
 
 	/**
@@ -28,7 +26,7 @@ public interface CenterInfoRepository extends JpaRepository<CenterInfo, Integer>
 			"(:centerName = '' OR s.centerName LIKE %:centerName%) AND " +
 			"(:region = '' OR s.address LIKE %:region%) AND " +
 			"(s.operationalStatus = 0)")
-	List<CenterInfo> findByCenterNameAndRegionAndStorageCapacity(
+	List<CenterInfo> findActiveCenters(
 			String centerName,
 			String region);
 }

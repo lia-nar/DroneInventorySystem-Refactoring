@@ -1,7 +1,10 @@
 package com.digitalojt.web.form;
 
+import com.digitalojt.web.consts.ModelAttributeContents;
 import com.digitalojt.web.validation.CenterInfoFormValidator;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
@@ -14,14 +17,11 @@ import lombok.Data;
 @CenterInfoFormValidator
 public class CenterInfoForm {
 
-	/**
-	 * センター名
-	 */
+	/**センター名*/
+    @Size(max = ModelAttributeContents.MAX_CENTER_NAME_LENGTH, message = "{centerName.length.wrongInput}")
 	private String centerName;
 
-	/**
-	 * 都道府県
-	 */
+	/**都道府県*/
 	private String region;
 
 	/**
@@ -34,18 +34,15 @@ public class CenterInfoForm {
 	 */
 	private Integer storageCapacityTo;
 
-	// 容量(From)初期値
-	final int INITIAL_CAPACITY_FROM = 10;
-
 	/**
-	 * 容量(From)のデフォルト値（10）を設定
-	 * 
+	 * 容量(From)のデフォルト値を設定
 	 * @return
 	 */
-	public Integer getStorageCapacityFrom() {
+	@PostConstruct
+	public Integer init() {
 
 		if (storageCapacityTo != null && storageCapacityFrom == null) {
-			return INITIAL_CAPACITY_FROM;
+			return ModelAttributeContents.INITIAL_CAPACITY_FROM;
 		}
 		return storageCapacityFrom;
 	}

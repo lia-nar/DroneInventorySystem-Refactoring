@@ -21,8 +21,8 @@ public class ModelAttributeContents {
 	// 操作履歴一覧
 	public static final String OPERATION_LOG_LIST = "operationLogList";
 
-	
-	
-	
+	/** 在庫センター情報画面*/
+	public static final int INITIAL_CAPACITY_FROM = 10;// 容量(From)初期値
+    public static final int MAX_CENTER_NAME_LENGTH = 20; // 最大文字数
 
 }

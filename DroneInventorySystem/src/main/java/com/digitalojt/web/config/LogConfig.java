@@ -14,9 +14,7 @@ import com.digitalojt.web.filter.LogSettingFilter;
 public class LogConfig {
 	
 	@Bean
-	LogSettingFilter logSettingFilterFilter() {
-
-		LogSettingFilter filter = new LogSettingFilter();
-		return filter;
+	public LogSettingFilter logSettingFilter() {
+		return new LogSettingFilter();
 	}
 }

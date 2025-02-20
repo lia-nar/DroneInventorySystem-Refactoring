@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.digitalojt.web.consts.LogMessage;
 import com.digitalojt.web.consts.ModelAttributeContents;
 import com.digitalojt.web.consts.UrlConsts;
 import com.digitalojt.web.form.LoginForm;
@@ -33,6 +34,8 @@ public class LoginController extends AbstractController {
 	 */
 	@GetMapping(UrlConsts.LOGIN)
 	public String index(Model model, LoginForm form) {
+        logStart(LogMessage.HTTP_GET);
+        logEnd(LogMessage.HTTP_GET);
 
 		return UrlConsts.LOGIN_INDEX;
 	}
@@ -45,9 +48,12 @@ public class LoginController extends AbstractController {
 	 */
 	@GetMapping(value = UrlConsts.LOGIN, params = "error")
 	public String error(Model model, LoginForm form) {
+		logStart(LogMessage.HTTP_GET);
 
 		Exception errorInfo = (Exception) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
 		model.addAttribute(ModelAttributeContents.ERROR_MSG, errorInfo.getMessage());
+		
+		logEnd(LogMessage.HTTP_GET);
 		return UrlConsts.LOGIN_INDEX;
 	}
 }

@@ -9,6 +9,7 @@ import com.digitalojt.web.consts.ErrorMessage;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import jakarta.validation.ReportAsSingleViolation;
 
 /**
  * 在庫センター情報画面のバリデーションチェック インターフェース
@@ -18,6 +19,7 @@ import jakarta.validation.Payload;
 @Constraint(validatedBy = CenterInfoFormValidatorImpl.class)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
+@ReportAsSingleViolation
 public @interface CenterInfoFormValidator {
 
 	String message() default ErrorMessage.ALL_FIELDS_EMPTY_ERROR_MESSAGE;

@@ -18,7 +18,7 @@
 			
 			<!-- 検索フォーム -->
 			<div class="search-container">
-				<form class="form-inline" method="post" th:action="@{'/admin/centerInfo/search'}" th:object="${CenterInfoForm}">
+				<form class="form-inline" method="get" th:action="@{'/admin/centerInfo/search'}" th:object="${CenterInfoForm}">
 					<label for="searchTerm" class="mr-2">検索条件</label>
 					
 					<label for="searchTerm" class="mr-2">センター名</label>
@@ -36,7 +36,7 @@
  				</form>
  				
  				<!-- エラーメッセージの表示 -->
- 				<div th:if="${errorMsg != null}" class="text-danger">
+ 				<div th:if="${errorMsg}" class="text-danger">
 					 <p th:text="${errorMsg}"></p>
 				</div>
 			</div>
@@ -61,6 +61,10 @@
 						</tr>
 					</tbody>
 				</table>
+			</div>
+	        <!-- 検索結果がない場合のメッセージ -->
+			<div th:if="${#lists.isEmpty(centerInfoList) and errorMessage == null}" class="text-muted">
+			    <p>検索結果がありません。</p>
 			</div>
 		</div>
 	</div>

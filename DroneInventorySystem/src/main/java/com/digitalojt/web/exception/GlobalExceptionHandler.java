@@ -1,41 +1,36 @@
 package com.digitalojt.web.exception;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.digitalojt.web.consts.LogMessage;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * グローバル例外ハンドラ
- * 
- * @author dotlife
- *
+ * グローバル例外ハンドラー
  */
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-	// 入力チェック時のハンドリング
+    /**
+     * 入力チェック例外のハンドリング
+     * @throws IOException 
+     * @throws ServletException 
+     */
     @ExceptionHandler(InvalidInputException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidInputException(InvalidInputException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ex.getMessage(), 
-                HttpStatus.BAD_REQUEST.value(), 
-                LocalDateTime.now().toString()
-            );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
-    
-    // 重複エントリ時のハンドリング
-    @ExceptionHandler(DuplicateEntryException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateEntryException(DuplicateEntryException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ex.getMessage(), 
-                HttpStatus.CONFLICT.value(), 
-                LocalDateTime.now().toString()
-            );
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    public String  handleInvalidInputException(InvalidInputException ex, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    	// エラーメッセージをフラッシュスコープに保存
+        redirectAttributes.addFlashAttribute(LogMessage.FLASH_ATTRIBUTE_ERROR, ex.getMessage());
+
+        // どの画面からリクエストが来たのかを取得
+        String referer = request.getHeader("Referer");
+        referer = referer.replaceAll("^(https?://[^/]+)", ""); // ドメイン部分を削除
+        request.setAttribute("errorMessage", ex.getMessage());
+        return "redirect:" + referer;
     }
 }

@@ -1,8 +1,9 @@
 package com.digitalojt.web.validation;
 
-import org.thymeleaf.util.StringUtils;
+import org.springframework.util.StringUtils;
 
 import com.digitalojt.web.consts.ErrorMessage;
+import com.digitalojt.web.exception.InvalidInputException;
 import com.digitalojt.web.form.CenterInfoForm;
 import com.digitalojt.web.util.InputValidator;
 
@@ -16,26 +17,23 @@ import jakarta.validation.ConstraintValidatorContext;
  */
 public class CenterInfoFormValidatorImpl implements ConstraintValidator<CenterInfoFormValidator, CenterInfoForm> {
 
-    /** 最大文字数定数 */
-    private static final int MAX_CENTER_NAME_LENGTH = 20;
-
     @Override
     public boolean isValid(CenterInfoForm form, ConstraintValidatorContext context) {
 
         // すべてのフィールドが空かをチェック
         if (isAllFieldsEmpty(form)) {
             addErrorMessage(context, ErrorMessage.ALL_FIELDS_EMPTY_ERROR_MESSAGE);
-            return false;
+            throw new InvalidInputException(ErrorMessage.ALL_FIELDS_EMPTY_ERROR_MESSAGE);
         }
 
         // センター名のバリデーション
         if (!isValidCenterName(form.getCenterName(), context)) {
-            return false;
+        	throw new InvalidInputException("invalid.input");
         }
 
         // 都道府県のバリデーション
         if (!isValidRegion(form.getRegion(), context)) {
-            return false;
+        	throw new InvalidInputException("invalid.input");
         }
 
         return true;
@@ -49,18 +47,9 @@ public class CenterInfoFormValidatorImpl implements ConstraintValidator<CenterIn
      * @return センター名が有効かどうか
      */
     private boolean isValidCenterName(String centerName, ConstraintValidatorContext context) {
-        if (centerName != null) {
-            // 不正文字列チェック
-            if (InputValidator.isValid(centerName)) {
-                addErrorMessage(context, ErrorMessage.INVALID_INPUT_ERROR_MESSAGE);
-                return false;
-            }
-
-            // 文字数チェック
-            if (centerName.length() > MAX_CENTER_NAME_LENGTH) {
-                addErrorMessage(context, ErrorMessage.CENTER_NAME_LENGTH_ERROR_MESSAGE);
-                return false;
-            }
+        if (!InputValidator.isValid(centerName)) {
+            addErrorMessage(context, ErrorMessage.INVALID_INPUT_ERROR_MESSAGE);
+            return false;
         }
         return true;
     }
@@ -73,13 +62,14 @@ public class CenterInfoFormValidatorImpl implements ConstraintValidator<CenterIn
      * @return 都道府県が有効かどうか
      */
     private boolean isValidRegion(String region, ConstraintValidatorContext context) {
-        if (region != null && InputValidator.isValid(region)) {
+        if (!InputValidator.isValid(region)) {
             addErrorMessage(context, ErrorMessage.INVALID_INPUT_ERROR_MESSAGE);
             return false;
         }
         return true;
     }
 
+    
     /**
      * すべてのフィールドが空かをチェック
      * 

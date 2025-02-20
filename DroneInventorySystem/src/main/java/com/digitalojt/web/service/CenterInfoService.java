@@ -39,6 +39,6 @@ public class CenterInfoService {
 	 * @return
 	 */
 	public List<CenterInfo> getCenterInfoData(String centerName, String region) {
-		return repository.findByCenterNameAndRegionAndStorageCapacity(centerName, region);
+		return repository.findActiveCenters(centerName, region);
 	}
 }

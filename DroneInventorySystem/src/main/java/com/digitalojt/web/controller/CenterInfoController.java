@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import com.digitalojt.web.consts.LogMessage;
 import com.digitalojt.web.consts.ModelAttributeContents;
@@ -18,7 +17,6 @@ import com.digitalojt.web.consts.UrlConsts;
 import com.digitalojt.web.entity.CenterInfo;
 import com.digitalojt.web.form.CenterInfoForm;
 import com.digitalojt.web.service.CenterInfoService;
-import com.digitalojt.web.util.MessageManager;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,78 +31,91 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CenterInfoController extends AbstractController {
 
-	/** センター情報 サービス */
-	private final CenterInfoService centerInfoService;
+    /** センター情報 サービス */
+    private final CenterInfoService centerInfoService;
 
-	/** メッセージソース */
-	private final MessageSource messageSource;
+    /** メッセージソース */
+    private final MessageSource messageSource;
 
-	/**
-	 * 都道府県Enumをリストに変換
-	 * 
-	 * @return
-	 */
-	@ModelAttribute(ModelAttributeContents.REGIONS)
-	public List<Region> populateRegions() {
-		return Arrays.asList(Region.values());
-	}
+    /**
+     * 都道府県Enumをリストに変換
+     * 
+     * @return
+     */
+    @ModelAttribute(ModelAttributeContents.REGIONS)
+    public List<Region> populateRegions() {
+        return Arrays.asList(Region.values());
+    }
 
-	/**
-	 * 初期表示
-	 * 
-	 * @param model
-	 * @return
-	 */
-	@GetMapping(UrlConsts.CENTER_INFO)
-	public String index(Model model) {
+    /**
+     * 初期表示
+     * 
+     * @param model
+     * @return
+     */
+    @GetMapping(UrlConsts.CENTER_INFO)
+    public String index(Model model) {
+        logStart(LogMessage.HTTP_GET);
 
-		logStart(LogMessage.HTTP_GET);
+        // 在庫センター情報画面に表示するデータを取得
+        List<CenterInfo> centerInfoList = centerInfoService.getCenterInfoData();
 
-		// 在庫センター情報画面に表示するデータを取得
-		List<CenterInfo> centerInfoList = centerInfoService.getCenterInfoData();
+        // 画面表示用に商品情報リストをセット
+        model.addAttribute(ModelAttributeContents.CENTER_INFO_LIST, centerInfoList);
 
-		// 画面表示用に商品情報リストをセット
-		model.addAttribute(ModelAttributeContents.CENTER_INFO_LIST, centerInfoList);
+        logEnd(LogMessage.HTTP_GET);
 
-		logEnd(LogMessage.HTTP_GET);
+        return UrlConsts.CENTER_INFO_INDEX;
+    }
 
-		return UrlConsts.CENTER_INFO_INDEX;
-	}
+    /**
+     * 検索結果表示
+     * 
+     * @param model
+     * @param form
+     * @return
+     */
+    @GetMapping(UrlConsts.CENTER_INFO_SEARCH)
+    public String search(Model model, @Valid CenterInfoForm form, BindingResult bindingResult) {
+        logStart(LogMessage.HTTP_POST);
 
-	/**
-	 * 検索結果表示
-	 * 
-	 * @param model
-	 * @param form
-	 * @return
-	 */
-	@PostMapping(UrlConsts.CENTER_INFO_SEARCH)
-	public String search(Model model, @Valid CenterInfoForm form, BindingResult bindingResult) {
+        // 入力値のバリデーションチェック
+        if (bindingResult.hasErrors()) {
+            handleValidationError(model, bindingResult, form);
+            return UrlConsts.CENTER_INFO_INDEX;
+        }
 
-		logStart(LogMessage.HTTP_POST);
+        // 検索条件に基づいて在庫センター情報を取得
+        List<CenterInfo> centerInfoList = centerInfoService.getCenterInfoData(form.getCenterName(), form.getRegion());
 
-		// TODO: 入力値のバリデーションチェックに引っかかる場合は、InvalidInputExceptionをthrow
-		// Valid項目チェック
-		if (bindingResult.hasErrors()) {
+        // 画面表示用に商品情報リストをセット
+        model.addAttribute(ModelAttributeContents.CENTER_INFO_LIST, centerInfoList);
 
-			// エラーメッセージをプロパティファイルから取得
-			String errorMsg = MessageManager.getMessage(messageSource,
-					bindingResult.getGlobalError().getDefaultMessage());
-			model.addAttribute(LogMessage.FLASH_ATTRIBUTE_ERROR, errorMsg);
-			
-			logValidationError(LogMessage.HTTP_POST, form + errorMsg);
+        logEnd(LogMessage.HTTP_POST);
 
-			return UrlConsts.CENTER_INFO_INDEX;
-		}
+        return UrlConsts.CENTER_INFO_INDEX;
+    }
 
-		// 在庫センター情報画面に表示するデータを取得
-		List<CenterInfo> centerInfoList = centerInfoService.getCenterInfoData(form.getCenterName(), form.getRegion());
+    /**
+     * バリデーションエラー処理
+     * 
+     * @param model
+     * @param bindingResult
+     * @param form
+     */
+    private void handleValidationError(Model model, BindingResult bindingResult, CenterInfoForm form) {
+        // エラーメッセージをリストに格納
+        StringBuilder errorMsg = new StringBuilder();
 
-		// 画面表示用に商品情報リストをセット
-		model.addAttribute(ModelAttributeContents.CENTER_INFO_LIST, centerInfoList);
-		
-		logEnd(LogMessage.HTTP_POST);
+        // フィールドごとのエラーメッセージを取得し、リストに追加
+        bindingResult.getFieldErrors().forEach(error -> {
+            String message = error.getDefaultMessage();
+            errorMsg.append(message).append("\r\n"); // メッセージを改行で区切って追加
+        });
 
-		return UrlConsts.CENTER_INFO_INDEX;
-	}
+        // エラーメッセージをモデルに追加
+        model.addAttribute(LogMessage.FLASH_ATTRIBUTE_ERROR, errorMsg.toString());
+
+        logValidationError(LogMessage.HTTP_POST, form + " " + errorMsg.toString());
+    }
 }
