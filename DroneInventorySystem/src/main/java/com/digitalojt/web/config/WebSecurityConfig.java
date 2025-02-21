@@ -10,8 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.digitalojt.web.consts.RoleConstants;
 import com.digitalojt.web.consts.UrlConsts;
-import com.digitalojt.web.consts.WebSecurity;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,7 +48,7 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated())
                 .formLogin(login -> login
                         .loginPage(UrlConsts.LOGIN)
-                        .usernameParameter(WebSecurity.ADMIN_ID)
+                        .usernameParameter(RoleConstants.ADMIN_ID)
                         .defaultSuccessUrl(UrlConsts.STOCK_LIST, true) // 追加: 成功時に強制遷移
                         .permitAll())
                 .logout(logout -> logout

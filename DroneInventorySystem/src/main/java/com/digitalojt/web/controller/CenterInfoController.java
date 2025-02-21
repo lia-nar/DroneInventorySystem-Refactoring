@@ -3,7 +3,6 @@ package com.digitalojt.web.controller;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,9 +32,6 @@ public class CenterInfoController extends AbstractController {
 
     /** センター情報 サービス */
     private final CenterInfoService centerInfoService;
-
-    /** メッセージソース */
-    private final MessageSource messageSource;
 
     /**
      * 都道府県Enumをリストに変換
@@ -77,7 +73,7 @@ public class CenterInfoController extends AbstractController {
      */
     @GetMapping(UrlConsts.CENTER_INFO_SEARCH)
     public String search(Model model, @Valid CenterInfoForm form, BindingResult bindingResult) {
-        logStart(LogMessage.HTTP_POST);
+        logStart(LogMessage.HTTP_GET);
 
         // 入力値のバリデーションチェック
         if (bindingResult.hasErrors()) {
@@ -91,7 +87,7 @@ public class CenterInfoController extends AbstractController {
         // 画面表示用に商品情報リストをセット
         model.addAttribute(ModelAttributeContents.CENTER_INFO_LIST, centerInfoList);
 
-        logEnd(LogMessage.HTTP_POST);
+        logEnd(LogMessage.HTTP_GET);
 
         return UrlConsts.CENTER_INFO_INDEX;
     }

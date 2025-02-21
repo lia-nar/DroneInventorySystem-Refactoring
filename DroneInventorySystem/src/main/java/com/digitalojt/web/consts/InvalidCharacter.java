@@ -19,6 +19,7 @@ public enum InvalidCharacter {
     ASTERISK('*'),
     DABLE_COTE('"'),
     SHINGLE_COTE('\''),
+    ZENBRANK('　'),
 	BRANK(' ');
 
     private final char character;
