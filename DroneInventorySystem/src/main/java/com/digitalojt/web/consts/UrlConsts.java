@@ -12,7 +12,7 @@ public class UrlConsts {
 	public static final String LOGIN = "/login";
 
 	// ログイン初期表示
-	public static final String LOGIN_INDEX = "admin/login/index";
+	public static final String LOGIN_INDEX = "admin/login/login";
 
 	// エラー
 	public static final String ERROR = "/error";
@@ -24,7 +24,7 @@ public class UrlConsts {
 	public static final String STOCK_LIST = "/admin/stockList";
 
 	// 在庫一覧画面 初期
-	public static final String STOCK_LIST_INDEX = "admin/stockList/index";
+	public static final String STOCK_LIST_INDEX = "admin/stockList/stockList";
 
 	// 在庫一覧画面 検索
 	public static final String STOCK_LIST_SEARCH = "/admin/stockList/search";
@@ -33,7 +33,7 @@ public class UrlConsts {
 	public static final String  CENTER_INFO = "/admin/centerInfo";
 
 	// 在庫センター情報画面初期表示
-	public static final String  CENTER_INFO_INDEX = "/admin/centerInfo/index";
+	public static final String  CENTER_INFO_INDEX = "/admin/centerInfo/centerInfo";
 	
 	// 在庫センター情報画面 検索
 	public static final String CENTER_INFO_SEARCH = "/admin/centerInfo/search";
@@ -42,7 +42,7 @@ public class UrlConsts {
 	public static final String  OPERATION_LOG = "/admin/operationLog";
 
 	// 操作履歴画面初期画面
-	public static final String  OPERATION_LOG_INDEX = "admin/operationLog/index";
+	public static final String  OPERATION_LOG_INDEX = "admin/operationLog/operationLog";
 
 	// 操作履歴画面 検索
 	public static final String  OPERATION_LOG_SEARCH = "/admin/operationLog/search";
