@@ -1,19 +1,28 @@
 package com.digitalojt.web.exception;
 
+import java.sql.SQLException;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.digitalojt.web.consts.LogMessage;
+import com.digitalojt.web.consts.UrlConsts;
 
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * グローバル例外ハンドラー
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
+	
+	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
      * 入力値不正例外のハンドリング
@@ -44,4 +53,33 @@ public class GlobalExceptionHandler {
 
         return "redirect:" + referer;
     }
+    
+    /**
+     * DBエラーのハンドリング
+     * @return error.html
+     */
+    @ExceptionHandler(DataAccessException.class)
+    public String handleDatabaseException(DataAccessException ex, Model model) {
+        logger.error("DBエラーが発生しました: {}", ex.getMessage(), ex);
+        return UrlConsts.ERROR_VIEW;
+    }
+    
+    /**
+     * SQLエラーのハンドリング
+     */
+    @ExceptionHandler(SQLException.class)
+    public String handleSQLException(SQLException ex, Model model) {
+        logger.error("SQLエラーが発生しました: {}", ex.getMessage(), ex);
+        return UrlConsts.ERROR_VIEW;
+    }
+    
+    /**
+     * 予期せぬシステムエラーのハンドリング
+     */
+    @ExceptionHandler(Exception.class)
+    public String handleGeneralException(Exception ex, Model model) {
+        logger.error("予期せぬエラーが発生しました: {}", ex.getMessage(), ex);
+        return UrlConsts.ERROR_VIEW;
+    }
+
 }
