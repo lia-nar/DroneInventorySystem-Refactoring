@@ -1,15 +1,16 @@
 package com.digitalojt.web.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.digitalojt.web.consts.LogMessage;
 import com.digitalojt.web.util.MessageManager;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 抽象コントローラー
@@ -18,10 +19,10 @@ import jakarta.servlet.http.HttpServletRequest;
  * @author dotlife
  *
  */
-public abstract class AbstractController {
+public abstract class AbstractController implements ErrorController {
 
     // ロガーは各コントローラで使えるように共通化
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
     
     @Autowired
     private HttpServletRequest request; // リクエスト情報を取得
@@ -67,6 +68,18 @@ public abstract class AbstractController {
     protected void logError(String action, Exception e) {
 		logger.error(String.format(LogMessage.ERROR_LOG, action, getMethodName(), e));
     }
+    
+    /**
+     * クリティカルエラーログ
+	 * 
+	 * @param logger ロガーオブジェクト
+     * @param action アクション名
+     * @param errorMsg エラーメッセージ
+     */
+    protected void logException(String action, String errorMsg) {
+        logger.error(String.format(LogMessage.ERROR_LOG, action, getMethodName(), String.valueOf(errorMsg)));
+    }
+
 
     /**
      * バリデーションエラーログ

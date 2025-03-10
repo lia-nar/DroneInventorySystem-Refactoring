@@ -1,13 +1,18 @@
 package com.digitalojt.web.exception;
 
+import java.sql.SQLException;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.dao.DataAccessException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.digitalojt.web.consts.LogMessage;
+import com.digitalojt.web.consts.UrlConsts;
 
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * グローバル例外ハンドラー
@@ -44,4 +49,36 @@ public class GlobalExceptionHandler {
 
         return "redirect:" + referer;
     }
+    
+    /**
+     * DBエラーのハンドリング
+     * @return ErrorController class
+     */
+    @ExceptionHandler(DataAccessException.class)
+    public String handleDatabaseException(DataAccessException ex, RedirectAttributes redirectAttributes) {
+        String errorMessage = ex.getMessage();
+        redirectAttributes.addFlashAttribute(LogMessage.FLASH_ATTRIBUTE_ERROR, errorMessage);
+        return "redirect:" + UrlConsts.ERROR;
+    }
+    
+    /**
+     * SQLエラーのハンドリング
+     */
+    @ExceptionHandler(SQLException.class)
+    public String handleSQLException(SQLException ex, RedirectAttributes redirectAttributes) {
+        String errorMessage = ex.getMessage();
+        redirectAttributes.addFlashAttribute(LogMessage.FLASH_ATTRIBUTE_ERROR, errorMessage);
+        return "redirect:" + UrlConsts.ERROR;
+    }
+    
+    /**
+     * 予期せぬシステムエラーのハンドリング
+     */
+    @ExceptionHandler(Exception.class)
+    public String handleGeneralException(Exception ex, RedirectAttributes redirectAttributes) {
+        String errorMessage = ex.getMessage();
+        redirectAttributes.addFlashAttribute(LogMessage.FLASH_ATTRIBUTE_ERROR, errorMessage);
+        return "redirect:" + UrlConsts.ERROR;
+    }
+
 }
