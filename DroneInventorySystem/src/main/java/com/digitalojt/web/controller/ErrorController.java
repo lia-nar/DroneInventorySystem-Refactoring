@@ -1,13 +1,10 @@
 package com.digitalojt.web.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
-import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.digitalojt.web.consts.LogMessage;
 import com.digitalojt.web.consts.UrlConsts;
 
 /**
@@ -16,13 +13,7 @@ import com.digitalojt.web.consts.UrlConsts;
  * @author dotlife
  */
 @Controller
-public class ErrorController extends AbstractErrorController {
-
-    private static final Logger logger = LoggerFactory.getLogger(ErrorController.class);
-
-    public ErrorController(ErrorAttributes errorAttributes) {
-        super(errorAttributes);
-    }
+public class ErrorController extends AbstractController {
 
     /**
      * エラーコントローラー
@@ -34,7 +25,7 @@ public class ErrorController extends AbstractErrorController {
 	@GetMapping(UrlConsts.ERROR)
     public String handleError(@ModelAttribute("errorMsg") String errorMsg) {  
 
-		logger.error("エラー内容: {}", errorMsg);
+        logException(LogMessage.HTTP_GET, errorMsg != null ? errorMsg : "不明なエラー");
 		
 		return UrlConsts.ERROR_VIEW;
 	}
