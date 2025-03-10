@@ -17,9 +17,8 @@ public class ErrorController extends AbstractController {
 
     /**
      * エラーコントローラー
-     * FlashAttribute で渡されたエラーメッセージを受け取りログ出力する。
      * 
-     * @param errorMsg GlobalExceptionHandler から渡されたエラーメッセージ
+     * @param  エラーメッセージ
      * @return エラーページ（error.html）
      */
 	@GetMapping(UrlConsts.ERROR)
