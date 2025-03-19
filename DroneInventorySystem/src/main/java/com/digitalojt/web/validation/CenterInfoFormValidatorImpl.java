@@ -1,14 +1,14 @@
 package com.digitalojt.web.validation;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
 import com.digitalojt.web.consts.ErrorMessage;
 import com.digitalojt.web.consts.InvalidCharacter;
 import com.digitalojt.web.consts.Region;
-import com.digitalojt.web.exception.InvalidInputException;
+import com.digitalojt.web.exception.ErrorMessageHelper;
 import com.digitalojt.web.form.CenterInfoForm;
 import com.digitalojt.web.util.InputValidator;
-
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * 在庫センター情報のバリデーション処理実装
@@ -26,19 +26,27 @@ public class CenterInfoFormValidatorImpl implements ConstraintValidator<CenterIn
     public boolean isValid(CenterInfoForm form, ConstraintValidatorContext context) {
         // フィールドがすべて空である場合にエラー処理
         if (isAllFieldsEmpty(form)) {
-            // すべてのフィールドが空の場合はエラーをスロー
-            throw new InvalidInputException(ErrorMessage.ALL_FIELDS_EMPTY_ERROR_MESSAGE);
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorMessageHelper.getMessage(ErrorMessage.ALL_FIELDS_EMPTY_ERROR_MESSAGE))
+                   .addConstraintViolation();
+            return false;
         }
         
         // センター名が不正文字に含まれる場合にエラー処理
         if (isValidCenterName(form.getCenterName())) {
-            throw new InvalidInputException(ErrorMessage.INVALID_INPUT_ERROR_MESSAGE);
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorMessageHelper.getMessage(ErrorMessage.ALL_FIELDS_EMPTY_ERROR_MESSAGE))
+                   .addConstraintViolation();
+            return false;
         }
 
         // 都道府県のバリデーション
         if (!isValidRegion(form.getRegion())) {
             // 都道府県が無効な場合、エラーメッセージをスロー
-        	throw new InvalidInputException(ErrorMessage.INVALID_INPUT_ERROR_MESSAGE);
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorMessageHelper.getMessage(ErrorMessage.ALL_FIELDS_EMPTY_ERROR_MESSAGE))
+                   .addConstraintViolation();
+            return false;
         }
 
         // バリデーションが成功した場合はtrueを返す

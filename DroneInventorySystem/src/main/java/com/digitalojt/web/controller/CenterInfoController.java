@@ -104,7 +104,7 @@ public class CenterInfoController extends AbstractController {
         StringBuilder errorMsg = new StringBuilder();
 
         // フィールドごとのエラーメッセージを取得し、リストに追加
-        bindingResult.getFieldErrors().forEach(error -> {
+        bindingResult.getGlobalErrors().forEach(error -> {
             String message = error.getDefaultMessage();
             errorMsg.append(message).append("\r\n"); // メッセージを改行で区切って追加
         });
