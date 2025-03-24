@@ -12,18 +12,18 @@ import java.util.stream.Collectors;
  */
 public enum OperationStatus {
 
-	SUCCESS("1", "成功"), 
-	FAILURE("0", "失敗");
+	SUCCESS(1, "成功"), 
+	FAILURE(0, "失敗");
 
-	private final String statusCode; // ステータスコード
+	private final Integer statusCode; // ステータスコード
 	private final String statusName; // ステータスの表示文言
 
-	OperationStatus(String statusCode, String statusName) {
+	OperationStatus(Integer statusCode, String statusName) {
 		this.statusCode = statusCode;
 		this.statusName = statusName;
 	}
 
-	public String getStatusCode() {
+	public Integer getStatusCode() {
 		return statusCode;
 	}
 
@@ -37,7 +37,7 @@ public enum OperationStatus {
 	 * @param statusCode 操作ステータスのコード
 	 * @return 操作ステータス名 (該当しない場合は "不明なステータス" を返す)
 	 */
-	public static String fromStatusCode(String statusCode) {
+	public static String fromStatusCode(Integer statusCode) {
 		for (OperationStatus status : values()) {
 			if (status.getStatusCode().equals(statusCode)) {
 				return status.getStatusName();

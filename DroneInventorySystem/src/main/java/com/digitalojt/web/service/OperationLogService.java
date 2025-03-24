@@ -1,5 +1,6 @@
 package com.digitalojt.web.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,14 +32,33 @@ public class OperationLogService {
 	 * 
 	 * @return
 	 */
-	public List<OperationLog> getOperationLogList() {
+	public List<OperationLog> getOperationLogList(String userId, String tableKey, Integer operateType,String operationDetails, Integer status, LocalDateTime createDate) {
 
+		// 1ヶ月前の開始日時を取得
+		LocalDateTime now = LocalDateTime.now();
+	    LocalDateTime oneMonth = now.minusMonths(1);
+	    
 		// 操作履歴情報の取得
-		List<OperationLog> operationLogList = repository.findAll();
-
+		List<OperationLog> operationLogList = repository.findOperationLogsForIndex(userId, tableKey, operateType, operationDetails, status, oneMonth, now);
+		
 		// 画面表示用にデータ加工した結果を返却
 		return convertOperationLogList(operationLogList);
 	}
+	
+	/**
+	 * 引数に合致する操作履歴情報を取得
+	 * 
+	 * @param userId
+	 * @param operateType
+	 * @param status
+	 * @param operationStart
+	 * @param operationEnd 
+	 * @return 引数と一致する値を取得した結果
+	 */
+    public List<OperationLog> getOperationLogData(String userId, Integer operateType, Integer status, LocalDateTime createDate, LocalDateTime updateDate) {
+    	List<OperationLog> operationLogList = repository.findOperationLogs(userId, operateType, status, createDate, updateDate);
+        return convertOperationLogList(operationLogList);
+    }
 
 	/**
 	 * 画面表示用にデータ加工
@@ -54,8 +74,8 @@ public class OperationLogService {
 					String operationStatus = convertOperationStatus(log.getStatus());
 
 					log.setTableKey(screenName);
-					log.setOperateType(operateType);
-					log.setStatus(operationStatus);
+					log.setOperateTypeStr(operateType);
+					log.setStatusStr(operationStatus);
 
 					return log;
 				})
@@ -78,17 +98,17 @@ public class OperationLogService {
 	 * @param operateType
 	 * @return
 	 */
-	private String convertOperateType(String operateType) {
+	private String convertOperateType(Integer operateType) {
 		return OperationType.fromTypeCode(operateType);
 	}
 
 	/**
 	 * 操作ステータスを画面表示用にデータ加工
 	 * 
-	 * @param operateType
+	 * @param operateStatus
 	 * @return
 	 */
-	private String convertOperationStatus(String operateStatus) {
+	private String convertOperationStatus(Integer operateStatus) {
 		return OperationStatus.fromStatusCode(operateStatus);
 	}
 }

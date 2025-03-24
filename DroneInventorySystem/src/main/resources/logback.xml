@@ -8,8 +8,7 @@
 		<target>System.out</target>
 		<encoder>
 			<charset>UTF-8</charset>
-			<pattern>%-5level %d{yyyy/MM/dd HH:mm:ss.SSS}
-				[%X{ipAddress}]-[%X{userId}] %logger{36} - %msg%n</pattern>
+			<pattern>%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} %X{ipAddress} %X{userId} %logger{36} - %msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -19,8 +18,8 @@
 		<!-- ログローテーション設定 -->
 		<rollingPolicy
 			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<file>logs/App.log</file> <!-- local環境用のフォルダーパス。ステージング環境以降はパスの変更をお願いします。 -->
-			<fileNamePattern>logs/App-%d{yyyyMMdd}.log</fileNamePattern>
+			<file>logs/stockmng.log</file> <!-- local環境用のフォルダーパス。ステージング環境以降はパスの変更をお願いします。 -->
+			<fileNamePattern>logs/%d{yyyy-MM-dd}_stockmng.log</fileNamePattern>
 			<maxHistory>180</maxHistory> <!-- 保存期間は半年 -->
 			<cleanHistoryOnStart>true</cleanHistoryOnStart>
 			<!--アプリケーション起動時に古いログを削除 -->
@@ -29,8 +28,7 @@
 		<!-- ログフォーマット -->
 		<encoder>
 			<charset>UTF-8</charset>
-			<pattern>%-5level %d{yyyy/MM/dd HH:mm:ss.SSS} [%X{ipAddress}]
-				-[%X{userId}] %logger{36} - %msg%n</pattern>
+			<pattern>%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} %X{ipAddress} %X{userId} %logger{36} - %msg%n</pattern>
 		</encoder>
 
 	</appender>

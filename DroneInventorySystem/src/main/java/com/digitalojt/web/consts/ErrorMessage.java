@@ -22,4 +22,7 @@ public class ErrorMessage {
 
 	// 文字超過に関するエラーメッセージ
 	public static final String CENTER_NAME_LENGTH_ERROR_MESSAGE = "centerName.length.wrongInput";
+	
+	// 操作履歴画面の操作時刻に関するエラーメッセージ
+	public static final String OPERATION_DATE_FIELD_ERROR_MESSAGE = "operationLog.operationDateField.empty";
 }
