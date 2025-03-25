@@ -32,14 +32,14 @@ public class OperationLogService {
 	 * 
 	 * @return
 	 */
-	public List<OperationLog> getOperationLogList(String userId, String tableKey, Integer operateType,String operationDetails, Integer status, LocalDateTime createDate) {
+	public List<OperationLog> getOperationLogList() {
 
 		// 1ヶ月前の開始日時を取得
 		LocalDateTime now = LocalDateTime.now();
 	    LocalDateTime oneMonth = now.minusMonths(1);
 	    
 		// 操作履歴情報の取得
-		List<OperationLog> operationLogList = repository.findOperationLogsForIndex(userId, tableKey, operateType, operationDetails, status, oneMonth, now);
+		List<OperationLog> operationLogList = repository.findOperationLogsForOneMonth(oneMonth, now);
 		
 		// 画面表示用にデータ加工した結果を返却
 		return convertOperationLogList(operationLogList);

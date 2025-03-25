@@ -1,6 +1,6 @@
 package com.digitalojt.web.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -94,11 +94,11 @@ public class CenterInfo {
      * 作成日付
      */
     @Column(name = "create_date", nullable = false)
-    private Date createDate;
+    private LocalDateTime createDate;
 
     /**
      * 更新日付
      */
     @Column(name = "update_date", nullable = false)
-    private Date updateDate;
+    private LocalDateTime updateDate;
 }

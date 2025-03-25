@@ -66,8 +66,8 @@ public class OperationLogController extends AbstractController {
 
 		logStart(LogMessage.HTTP_GET);
 		
-		// 操作履歴情報の取得
-		List<OperationLog> operationLogList = operationLogService.getOperationLogList(null, null, null, null, null, null);
+        // 操作履歴情報の取得（直近1か月分のみ）
+        List<OperationLog> operationLogList = operationLogService.getOperationLogList();
 		
         // 画面表示用に操作履歴情報リストをセット
 		model.addAttribute(ModelAttributeContents.OPERATION_LOG_LIST, operationLogList);
@@ -111,7 +111,8 @@ public class OperationLogController extends AbstractController {
         }
         
         // 検索条件に基づいて操作履歴情報を取得
-        List<OperationLog> operationLogList = operationLogService.getOperationLogData(form.getUserId(), operateTypeCode, statusCode, form.getCreateDate(), form.getUpdateDate());
+        List<OperationLog> operationLogList = operationLogService.getOperationLogData(
+        		form.getUserId(), operateTypeCode, statusCode, form.getCreateDate(), form.getUpdateDate());
 
         // 画面表示用に操作履歴情報リストをセット
         model.addAttribute(ModelAttributeContents.OPERATION_LOG_LIST, operationLogList);
