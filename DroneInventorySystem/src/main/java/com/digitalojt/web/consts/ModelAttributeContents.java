@@ -14,6 +14,12 @@ public class ModelAttributeContents {
 	// 都道府県
 	public static final String REGIONS = "regions";
 	
+	// 操作の種類
+	public static final String TYPE = "type";
+	
+	// 操作のステータス
+	public static final String STATUS = "status";
+	
 	// エラーメッセージ
 	public static final String ERROR_MSG = "errorMsg";
 	

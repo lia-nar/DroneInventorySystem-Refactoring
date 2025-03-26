@@ -54,10 +54,46 @@
 		</div>
 
 		<div class="card-body">
+			<div class="search-container">
+				<!-- 検索フォーム -->
+				<form class="form-inline" method="get" th:action="@{/admin/operationLog/search}" th:object="${operationLogForm}">
+				    <div class="d-flex align-items-center">
+				        <label class="mr-2 font-weight-bold">検索条件</label>
+						
+						<label for="searchTerm" class="mr-2">管理者名</label>
+						<input type="text" id="searchTerm" name="userId" class="form-control mr-2">
+						
+						<label for="searchTerm" class="mr-2">操作</label>
+						<select id="searchTerm" name="operateTypeStr" class="form-control mr-2">
+							 <option value="">選択してください</option>
+							 <option th:each="type : ${type}"
+							         th:value="${type.name()}"
+							         th:text="${type.getTypeName()}">
+							 </option>
+						</select>
 
+						<label for="searchTerm" class="mr-2">ステータス</label>
+						<select id="searchTerm" name="statusStr" class="form-control mr-2">
+							 <option value="">選択してください</option>
+							 <option th:each="status : ${status}"
+							         th:value="${status.name()}"
+							         th:text="${status.getStatusName()}">
+							 </option>
+						</select>
+
+				        <label class="mr-2">操作時刻</label>
+						<input type="datetime-local" id="searchTerm" name="createDate" class="form-control mr-3">
+				        <span class="mr-2">～</span>
+						<input type="datetime-local" id="searchTerm" name="updateDate" class="form-control mr-3">
+						
+						<!-- 検索ボタン -->
+				        <button type="submit" class="btn btn-primary">検索</button>
+				    </div>
+				</form>
+				
 				<!-- エラーメッセージの表示 -->
-				<div th:if="${errorMsg != null}" class="error-message">
-					<p th:text="${errorMsg}"></p>
+				<div th:if="${errorMsg}" class="text-danger">
+					 <p th:text="${errorMsg}"></p>
 				</div>
 			</div>
 
@@ -71,6 +107,7 @@
 								<th>管理者名</th>
 								<th>画面名</th>
 								<th>操作</th>
+								<th>操作情報</th>
 								<th>ステータス</th>
 								<th>操作時刻</th>
 							</tr>
@@ -79,9 +116,10 @@
 							<tr th:each="item : ${operationLogList}">
 								<td>[[${item.adminInfo.adminName}]]</td>
 								<td>[[${item.tableKey}]]</td>
-								<td>[[${item.operateType}]]</td>
-								<td>[[${item.status}]]</td>
-								<td>[[${item.createDate}]]</td>
+								<td>[[${item.operateTypeStr}]]</td>
+								<td>[[${item.operationDetails}]]</td>
+								<td>[[${item.statusStr}]]</td>
+								<td>[[${item.formattedCreateDate}]]</td>
 							</tr>
 						</tbody>
 					</table>

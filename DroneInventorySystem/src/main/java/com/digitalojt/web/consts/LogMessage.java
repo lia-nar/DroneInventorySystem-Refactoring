@@ -16,7 +16,7 @@ public class LogMessage {
 
 	//アクセスログ
 	//ACCESSだけ表示される
-	public static final String ACCESS_LOG = "ACCESS";
+	public static final String ACCESS_LOG = "ACCESS: %s";
 
 	//エラーログ
 	//(GETかPOST)-(処理対象の関数名)-(エラー内容)
